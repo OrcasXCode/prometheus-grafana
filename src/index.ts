@@ -3,20 +3,22 @@ const app=express();
 app.use(express.json());
 // import  {middleware}  from "./middelware";
 import client from "prom-client"
-import { requestMiddelwareCounter } from "./metrics/requestCount";
+// import { requestMiddelwareCounter } from "./metrics/requestCount";
+import { activeRequestCounter } from "./metrics/activeRequests";
 
 
 // app.use(middleware);
 
-app.use(requestMiddelwareCounter);
+// app.use(requestMiddelwareCounter);
+app.use(activeRequestCounter);
 
 
-app.get("/user",(req,res)=>{
-    res.send({
-        name:"Jhon Doe",
-        age:20
-    })
-})
+// app.get("/user",(req,res)=>{
+//     res.send({
+//         name:"Jhon Doe",
+//         age:20
+//     })
+// })
 
 
 app.post("/user",(req,res)=>{
@@ -36,6 +38,14 @@ app.get("/metrics",async(req,res)=>{
     //!this sends all the metrics stored to the client side
     res.end(metrics);
 })
+
+app.get("/user", async (req, res) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    res.send({
+        name: "John Doe",
+        age: 25,
+    });
+});
 
 app.listen(3000,()=>{
     console.log("Server is running on PORT 3000")

@@ -13,7 +13,6 @@ export const requestMiddelwareCounter=(req:Request,res:Response,next:NextFunctio
     const startTime=Date.now();
     res.on('finish',()=>{
         const endTime=Date.now();
-        console.log(`Time for the response is ${endTime-startTime} ms`);
         requestCounter.inc({
             method:req.method,
             route : req.route ? req.route.path : req.path,

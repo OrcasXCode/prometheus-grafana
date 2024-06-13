@@ -17,23 +17,35 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // import  {middleware}  from "./middelware";
 const prom_client_1 = __importDefault(require("prom-client"));
-const requestCount_1 = require("./metrics/requestCount");
+// import { requestMiddelwareCounter } from "./metrics/requestCount";
+const activeRequests_1 = require("./metrics/activeRequests");
 // app.use(middleware);
-app.use(requestCount_1.requestMiddelwareCounter);
-app.get("/user", (req, res) => {
-    res.send({
-        name: "Jhon Doe",
-        age: 20
-    });
-});
+// app.use(requestMiddelwareCounter);
+app.use(activeRequests_1.activeRequestCounter);
+// app.get("/user",(req,res)=>{
+//     res.send({
+//         name:"Jhon Doe",
+//         age:20
+//     })
+// })
 app.post("/user", (req, res) => {
     const user = req.body;
     res.send(Object.assign(Object.assign({}, user), { id: 1 }));
 });
 app.get("/metrics", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //!This make the pull request for the metrics
     const metrics = yield prom_client_1.default.register.metrics();
+    //!this tells the user how to interpret with the metrics data
     res.set("Content-Type", prom_client_1.default.register.contentType);
+    //!this sends all the metrics stored to the client side
     res.end(metrics);
+}));
+app.get("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield new Promise((resolve) => setTimeout(resolve, 1000));
+    res.send({
+        name: "John Doe",
+        age: 25,
+    });
 }));
 app.listen(3000, () => {
     console.log("Server is running on PORT 3000");
