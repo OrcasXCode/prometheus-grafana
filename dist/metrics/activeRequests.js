@@ -1,7 +1,4 @@
 "use strict";
-// import { NextFunction,Request,Response } from "express";
-// import client from "prom-client";
-// import { requestCounter } from "./counter";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -16,19 +13,16 @@ const activeRequest = new prom_client_1.default.Gauge({
 });
 const activeRequestCounter = (req, res, next) => {
     const startTime = Date.now();
-    console.log(`Incrementing active request counter for ${req.method} ${req.url}`);
-    activeRequest.inc({ method: req.method, route: req.route ? req.route.path : req.path, status_code: "unknown" });
+    activeRequest.inc();
     res.on('finish', () => {
         const endTime = Date.now();
         console.log(`Time for the response is ${endTime - startTime} ms`);
-        const labels = {
+        counter_1.requestCounter.inc({
             method: req.method,
             route: req.route ? req.route.path : req.path,
-            status_code: res.statusCode.toString()
-        };
-        counter_1.requestCounter.inc(labels);
-        console.log(`Decrementing active request counter for ${req.method} ${req.url}`);
-        activeRequest.dec(labels);
+            status_code: res.statusCode
+        });
+        activeRequest.dec();
     });
     next();
 };

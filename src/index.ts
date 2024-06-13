@@ -3,14 +3,16 @@ const app=express();
 app.use(express.json());
 // import  {middleware}  from "./middelware";
 import client from "prom-client"
+import { metricsMiddleware } from "./metrics/histogramRequest";
 // import { requestMiddelwareCounter } from "./metrics/requestCount";
-import { activeRequestCounter } from "./metrics/activeRequests";
+// import { activeRequestCounter } from "./metrics/activeRequests";
 
 
 // app.use(middleware);
 
 // app.use(requestMiddelwareCounter);
-app.use(activeRequestCounter);
+// app.use(activeRequestCounter);
+app.use(metricsMiddleware);
 
 
 // app.get("/user",(req,res)=>{
@@ -40,7 +42,7 @@ app.get("/metrics",async(req,res)=>{
 })
 
 app.get("/user", async (req, res) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
     res.send({
         name: "John Doe",
         age: 25,

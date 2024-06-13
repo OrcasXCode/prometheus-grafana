@@ -17,11 +17,13 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // import  {middleware}  from "./middelware";
 const prom_client_1 = __importDefault(require("prom-client"));
+const histogramRequest_1 = require("./metrics/histogramRequest");
 // import { requestMiddelwareCounter } from "./metrics/requestCount";
-const activeRequests_1 = require("./metrics/activeRequests");
+// import { activeRequestCounter } from "./metrics/activeRequests";
 // app.use(middleware);
 // app.use(requestMiddelwareCounter);
-app.use(activeRequests_1.activeRequestCounter);
+// app.use(activeRequestCounter);
+app.use(histogramRequest_1.metricsMiddleware);
 // app.get("/user",(req,res)=>{
 //     res.send({
 //         name:"Jhon Doe",
@@ -41,7 +43,7 @@ app.get("/metrics", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     res.end(metrics);
 }));
 app.get("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield new Promise((resolve) => setTimeout(resolve, 1000));
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
     res.send({
         name: "John Doe",
         age: 25,
